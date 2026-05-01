@@ -85,6 +85,22 @@ Le CSV original à la racine du projet n'est pas supprimé.
 - Docker.
 - CI GitHub Actions.
 
+## 📸 Aperçu de l'application
+
+### Interface Streamlit
+
+![Screenshot 1](screenshots/01-screenshot.png)
+![Screenshot 2](screenshots/02-screenshot.png)
+![Screenshot 3](screenshots/03-screenshot.png)
+![Screenshot 4](screenshots/04-screenshot.png)
+![Screenshot 5](screenshots/05-screenshot.png)
+![Screenshot 6](screenshots/06-screenshot.png)
+
+### API FastAPI
+
+![Screenshot 7](screenshots/07-screenshot.png)
+![Screenshot 8](screenshots/08-screenshot.png)
+
 ## Installation
 
 Créer et activer un environnement virtuel :
