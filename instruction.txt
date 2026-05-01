@@ -1,0 +1,435 @@
+Tu es un développeur senior Python, Data Analyst, BI Engineer et architecte IA.
+
+Je travaille dans VS Code dans un dossier qui s’appelle exactement :
+agent ia
+
+Dans ce dossier, j’ai déjà un fichier CSV :
+Sales_April_2019.csv
+
+Je veux créer un projet GitHub professionnel pour mon profil personnel Walid.
+
+Nom du projet :
+Sales Insight AI Agent
+
+Objectif :
+Créer une application complète d’analyse de ventes e-commerce basée sur une architecture multi-agents locale.
+
+Le projet doit analyser le fichier Sales_April_2019.csv, nettoyer les données, calculer les KPI, générer des graphiques, produire des recommandations business, générer un rapport Markdown et permettre à l’utilisateur de poser des questions à un agent IA local.
+
+Très important :
+- Le projet doit fonctionner sans clé OpenAI.
+- Ne pas appeler d’API externe.
+- Les agents doivent être locaux, déterministes et basés sur Pandas + logique métier.
+- Ne jamais inventer de chiffres.
+- Tous les résultats doivent venir du dataframe nettoyé.
+- Ne pas supprimer le fichier CSV existant.
+- Si Sales_April_2019.csv est à la racine, créer un dossier data/ et copier le fichier dedans :
+  data/Sales_April_2019.csv
+- Générer tous les fichiers complets.
+- Ne pas utiliser de placeholders.
+- Ne pas écrire TODO.
+- Ne pas écrire “reste du code inchangé”.
+- Le projet doit être prêt à lancer.
+
+Technologies à utiliser :
+- Python 3.11+
+- Streamlit
+- Pandas
+- Plotly
+- FastAPI
+- Uvicorn
+- python-dotenv
+- pytest
+- Docker
+- GitHub Actions
+- Export CSV propre pour Power BI
+
+Structure exacte du projet à créer :
+
+agent ia/
+│
+├── app/
+│   ├── main.py
+│   └── components/
+│       ├── __init__.py
+│       ├── kpi_cards.py
+│       └── charts_view.py
+│
+├── api/
+│   ├── __init__.py
+│   └── main.py
+│
+├── agents/
+│   ├── __init__.py
+│   ├── orchestrator_agent.py
+│   ├── data_cleaning_agent.py
+│   ├── data_quality_agent.py
+│   ├── kpi_agent.py
+│   ├── chart_agent.py
+│   ├── business_insight_agent.py
+│   ├── recommendation_agent.py
+│   ├── report_agent.py
+│   └── qa_agent.py
+│
+├── tools/
+│   ├── __init__.py
+│   ├── data_loader.py
+│   ├── sales_cleaner.py
+│   ├── sales_kpis.py
+│   ├── sales_charts.py
+│   ├── markdown_report.py
+│   └── powerbi_export.py
+│
+├── data/
+│   └── Sales_April_2019.csv
+│
+├── exports/
+│   └── .gitkeep
+│
+├── reports/
+│   └── example_report.md
+│
+├── tests/
+│   ├── test_data_cleaning_agent.py
+│   ├── test_data_quality_agent.py
+│   ├── test_kpi_agent.py
+│   └── test_powerbi_export.py
+│
+├── .github/
+│   └── workflows/
+│       └── python-tests.yml
+│
+├── .env.example
+├── .gitignore
+├── Dockerfile
+├── README.md
+├── requirements.txt
+└── run_app.py
+
+Rôle des agents :
+
+1. OrchestratorAgent
+Fichier : agents/orchestrator_agent.py
+Responsabilité :
+- recevoir un dataframe brut ;
+- appeler tous les agents dans le bon ordre ;
+- retourner un dictionnaire final avec :
+  - raw_shape
+  - cleaned_dataframe
+  - cleaning_stats
+  - quality_report
+  - kpis
+  - insights
+  - recommendations
+  - markdown_report
+
+2. DataCleaningAgent
+Fichier : agents/data_cleaning_agent.py
+Responsabilité :
+- supprimer les lignes complètement vides ;
+- supprimer les lignes où la colonne “Order ID” contient “Order ID” ;
+- convertir “Quantity Ordered” en numérique ;
+- convertir “Price Each” en numérique ;
+- convertir “Order Date” en datetime ;
+- supprimer les lignes invalides après conversion ;
+- créer une colonne “Sales” = Quantity Ordered * Price Each ;
+- extraire la ville et l’état depuis “Purchase Address” dans une colonne “City” au format “City (State)” ;
+- créer les colonnes “Hour”, “Day” et “Month” ;
+- retourner le dataframe nettoyé et des statistiques de nettoyage.
+
+3. DataQualityAgent
+Fichier : agents/data_quality_agent.py
+Responsabilité :
+- compter les lignes brutes ;
+- compter les lignes après nettoyage ;
+- compter les lignes vides supprimées ;
+- compter les en-têtes répétés supprimés ;
+- compter les doublons ;
+- détecter les valeurs manquantes ;
+- calculer un score qualité sur 100 ;
+- expliquer les problèmes détectés clairement.
+
+4. KPIAgent
+Fichier : agents/kpi_agent.py
+Responsabilité :
+- calculer le chiffre d’affaires total ;
+- calculer le nombre de commandes uniques ;
+- calculer le nombre total d’unités vendues ;
+- calculer le panier moyen ;
+- calculer le prix moyen par ligne ;
+- trouver le produit qui génère le plus de chiffre d’affaires ;
+- trouver le produit le plus vendu en quantité ;
+- trouver la ville qui génère le plus de chiffre d’affaires ;
+- trouver la meilleure heure de vente ;
+- trouver le meilleur jour de vente.
+
+5. ChartAgent
+Fichier : agents/chart_agent.py
+Responsabilité :
+- générer les données nécessaires aux graphiques ;
+- ne pas faire de calculs métier dans Streamlit ;
+- préparer :
+  - top 10 produits par chiffre d’affaires ;
+  - top 10 produits par quantité vendue ;
+  - chiffre d’affaires par ville ;
+  - chiffre d’affaires par heure ;
+  - chiffre d’affaires par jour ;
+  - distribution des ventes.
+
+6. BusinessInsightAgent
+Fichier : agents/business_insight_agent.py
+Responsabilité :
+- transformer les KPI en analyse business ;
+- produire un résumé exécutif ;
+- expliquer les tendances principales ;
+- expliquer les produits, villes et horaires les plus importants ;
+- ne jamais inventer de données.
+
+7. RecommendationAgent
+Fichier : agents/recommendation_agent.py
+Responsabilité :
+- proposer des recommandations marketing ;
+- proposer des recommandations produits ;
+- proposer des recommandations horaires ;
+- proposer des recommandations data quality ;
+- chaque recommandation doit être liée à un KPI réel.
+
+8. ReportAgent
+Fichier : agents/report_agent.py
+Responsabilité :
+- générer un rapport Markdown complet ;
+- inclure :
+  - titre ;
+  - résumé exécutif ;
+  - qualité des données ;
+  - KPI ;
+  - insights ;
+  - recommandations ;
+  - limites du dataset.
+
+9. QAAgent
+Fichier : agents/qa_agent.py
+Responsabilité :
+- répondre aux questions utilisateur dans Streamlit ;
+- utiliser uniquement les KPI, quality_report, insights et recommendations ;
+- répondre aux questions sur :
+  - KPI ;
+  - meilleur produit ;
+  - meilleure ville ;
+  - meilleure heure ;
+  - qualité des données ;
+  - recommandations ;
+  - résumé global ;
+- si la question est hors périmètre, répondre clairement :
+  “Je peux répondre uniquement aux questions liées aux ventes, KPI, produits, villes, horaires, qualité des données et recommandations.”
+
+Fonctionnalités Streamlit :
+
+Créer app/main.py avec une interface professionnelle.
+
+Titre :
+Sales Insight AI Agent
+
+Sous-titre :
+AI-powered Sales Data Analyst
+
+Sidebar :
+- bouton “Utiliser le dataset par défaut”
+- uploader CSV
+- bouton “Exporter dataset propre pour Power BI”
+
+Onglets :
+1. Overview
+2. Data Quality
+3. KPI & Charts
+4. AI Agents
+5. Report
+
+Onglet Overview :
+- afficher la période couverte ;
+- afficher le nombre de lignes brutes ;
+- afficher le nombre de lignes nettoyées ;
+- afficher un aperçu du dataframe nettoyé ;
+- afficher les colonnes disponibles.
+
+Onglet Data Quality :
+- afficher le score qualité ;
+- afficher les lignes vides supprimées ;
+- afficher les en-têtes répétés supprimés ;
+- afficher les doublons ;
+- afficher les valeurs manquantes par colonne ;
+- expliquer les problèmes détectés.
+
+Onglet KPI & Charts :
+- afficher les KPI sous forme de cartes ;
+- afficher les graphiques Plotly :
+  - top produits par chiffre d’affaires ;
+  - top produits par quantité ;
+  - chiffre d’affaires par ville ;
+  - chiffre d’affaires par heure ;
+  - chiffre d’affaires par jour ;
+  - distribution des ventes.
+
+Onglet AI Agents :
+- afficher une carte pour chaque agent ;
+- afficher son rôle ;
+- afficher son résultat principal ;
+- ajouter une zone de question pour QAAgent ;
+- afficher la réponse de l’agent.
+
+Onglet Report :
+- afficher le rapport Markdown ;
+- ajouter un bouton pour télécharger le rapport Markdown ;
+- ajouter un bouton pour exporter le dataset nettoyé en CSV pour Power BI.
+
+Fonctionnalités FastAPI :
+
+Créer api/main.py avec une API simple.
+
+Endpoints :
+- GET /health
+  retourne status OK.
+- GET /kpis
+  charge le dataset par défaut, nettoie les données et retourne les KPI en JSON.
+- GET /quality
+  retourne le rapport qualité en JSON.
+- GET /recommendations
+  retourne les recommandations en JSON.
+- POST /ask
+  reçoit une question JSON :
+  {
+    "question": "Quel est le meilleur produit ?"
+  }
+  retourne la réponse du QAAgent.
+
+Important pour FastAPI :
+- ne pas dupliquer la logique métier ;
+- réutiliser les agents et tools existants ;
+- gérer les erreurs proprement.
+
+Power BI export :
+
+Créer tools/powerbi_export.py
+Responsabilité :
+- exporter le dataframe nettoyé dans :
+  exports/clean_sales_for_powerbi.csv
+- garder les colonnes utiles :
+  Order ID
+  Product
+  Quantity Ordered
+  Price Each
+  Order Date
+  Purchase Address
+  Sales
+  City
+  Hour
+  Day
+  Month
+- retourner le chemin du fichier exporté.
+
+Graphiques :
+
+Créer tools/sales_charts.py
+Responsabilité :
+- générer des figures Plotly propres ;
+- ne pas mettre de logique Streamlit dans ce fichier ;
+- retourner des figures prêtes à afficher avec st.plotly_chart.
+
+README.md :
+
+Créer un README professionnel avec :
+- nom du projet ;
+- description ;
+- objectif ;
+- architecture multi-agents ;
+- rôle de chaque agent ;
+- stack technique ;
+- dataset utilisé ;
+- fonctionnalités ;
+- installation locale ;
+- lancement Streamlit ;
+- lancement FastAPI ;
+- lancement des tests ;
+- utilisation Docker ;
+- export Power BI ;
+- exemples de questions à poser à l’agent ;
+- section “Why this project matters for Data Analyst / BI / AI roles” ;
+- section “Roadmap”.
+
+requirements.txt :
+
+Inclure uniquement les dépendances nécessaires :
+streamlit
+pandas
+plotly
+fastapi
+uvicorn
+python-dotenv
+pytest
+openpyxl
+
+Tests pytest :
+
+Créer des tests pour :
+- vérifier que DataCleaningAgent supprime les lignes vides ;
+- vérifier que DataCleaningAgent supprime les en-têtes répétés ;
+- vérifier que la colonne Sales est créée correctement ;
+- vérifier que KPIAgent calcule le chiffre d’affaires total ;
+- vérifier que DataQualityAgent retourne un score entre 0 et 100 ;
+- vérifier que powerbi_export crée un fichier CSV.
+
+GitHub Actions :
+
+Créer .github/workflows/python-tests.yml
+
+Le workflow doit :
+- se lancer sur push et pull_request ;
+- installer Python 3.11 ;
+- installer requirements.txt ;
+- lancer pytest.
+
+Dockerfile :
+
+Créer un Dockerfile simple qui :
+- utilise python:3.11-slim ;
+- copie le projet ;
+- installe requirements.txt ;
+- expose le port 8501 ;
+- lance Streamlit avec :
+  streamlit run app/main.py --server.address=0.0.0.0 --server.port=8501
+
+.gitignore :
+
+Inclure :
+.env
+__pycache__/
+.pytest_cache/
+.venv/
+*.pyc
+.streamlit/secrets.toml
+exports/*.csv
+!exports/.gitkeep
+
+.env.example :
+
+Créer :
+OPENAI_API_KEY=
+APP_ENV=development
+
+Même si OpenAI n’est pas utilisé dans cette version, garder la variable uniquement pour une future évolution.
+
+Commandes finales à me donner après génération :
+- commande pour créer l’environnement virtuel ;
+- commande pour installer les dépendances ;
+- commande pour lancer Streamlit ;
+- commande pour lancer FastAPI ;
+- commande pour lancer les tests ;
+- commandes Git pour initialiser le repo et pousser sur GitHub.
+
+Contraintes finales :
+- Tous les fichiers doivent être complets.
+- Le code doit être propre et immédiatement exécutable.
+- Ne pas créer d’architecture inutilement compliquée.
+- Ne pas casser l’exécution si le CSV contient des lignes vides ou des en-têtes répétés.
+- Ne pas inventer de chiffres dans les agents.
+- Utiliser uniquement les données calculées depuis le CSV.
